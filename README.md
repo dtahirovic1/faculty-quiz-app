@@ -1,4 +1,4 @@
-# RMA26PNNNNN
+# RMA
 
 Mobilna aplikacija za fakultetske kvizove rađena u okviru predmeta **Razvoj mobilnih aplikacija**.
 
