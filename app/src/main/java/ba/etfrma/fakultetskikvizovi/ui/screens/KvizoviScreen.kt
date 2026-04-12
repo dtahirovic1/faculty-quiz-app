@@ -40,15 +40,9 @@ fun KvizoviScreen(
             .fillMaxSize()
             .padding(8.dp)
     ) {
-
-        // ============================
-        // UPIS — 3 dropdowna + dugme
-        // ============================
-
         Text(text = "Upis na predmet", style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Dropdown 1 — Godina
         ExposedDropdownMenuBox(
             expanded = godinaOtvorena,
             onExpandedChange = { godinaOtvorena = !godinaOtvorena },
@@ -85,7 +79,6 @@ fun KvizoviScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Dropdown 2 — Predmet
         ExposedDropdownMenuBox(
             expanded = predmetOtvoren,
             onExpandedChange = {
@@ -131,7 +124,6 @@ fun KvizoviScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Dropdown 3 — Grupa
         ExposedDropdownMenuBox(
             expanded = grupaOtvorena,
             onExpandedChange = {
@@ -170,7 +162,6 @@ fun KvizoviScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Dugme Upiši me
         Button(
             onClick = {
                 upisViewModel.upisise()
@@ -185,10 +176,6 @@ fun KvizoviScreen(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        // ============================
-        // FILTER DROPDOWN
-        // ============================
 
         ExposedDropdownMenuBox(
             expanded = filterOtvoren,
@@ -224,10 +211,6 @@ fun KvizoviScreen(
         }
 
         Spacer(modifier = Modifier.height(8.dp))
-
-        // ============================
-        // LISTA KVIZOVA
-        // ============================
 
         LazyColumn(
             modifier = Modifier

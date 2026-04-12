@@ -35,12 +35,10 @@ fun KvizCard(kviz: Kviz) {
             .padding(8.dp)
             .testTag("kviz_item_${kviz.naziv}")
     ) {
-        Row(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .padding(12.dp)
         ) {
             Column {
                 Text(
@@ -51,11 +49,17 @@ fun KvizCard(kviz: Kviz) {
                 Text(text = datumZaPrikaz)
                 Text(text = "${kviz.trajanje} min")
             }
-            Column(horizontalAlignment = Alignment.End) {
+
+            Column(
+                modifier = Modifier
+                    .align(Alignment.TopEnd),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                StatusIndikator(status = status)
+
                 kviz.osvojeniBodovi?.let {
                     Text(text = it.toString())
                 }
-                StatusIndikator(status = status)
             }
         }
     }
