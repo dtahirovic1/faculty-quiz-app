@@ -6,8 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.testTag
-import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ba.etfrma.fakultetskikvizovi.data.referentniDatum
@@ -34,7 +33,7 @@ fun KvizCard(kviz: Kviz) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .semantics { testTag = "kviz_item_${kviz.naziv}" }
+            .testTag("kviz_item_${kviz.naziv}")
     ) {
         Row(
             modifier = Modifier

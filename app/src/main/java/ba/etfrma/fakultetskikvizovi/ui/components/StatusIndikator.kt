@@ -30,7 +30,6 @@ fun StatusIndikator(status: KvizStatus) {
     Image(
         painter = painterResource(id = slikaId),
         contentDescription = opis,
-        modifier = Modifier.semantics { contentDescription = opis }
-            .testTag("kviz_status_icon")
+        modifier = Modifier.testTag("kviz_status_icon")
     )
 }
