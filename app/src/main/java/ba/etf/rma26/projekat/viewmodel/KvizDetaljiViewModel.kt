@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 
 class KvizDetaljiViewModel : ViewModel() {
 
@@ -72,17 +71,30 @@ class KvizDetaljiViewModel : ViewModel() {
 
             _pokusaj.value = noviPokusaj
             _pitanja.value = PitanjeKvizRepository.getPitanja(idKviza)
+
         }
     }
 
     fun odgovori(idPitanja: Int, odgovor: Int) {
-        val idPokusaja = _pokusaj.value?.id ?: return
+        val trenutniPokusaj = _pokusaj.value ?: return
+        val idPokusaja = trenutniPokusaj.id
 
         viewModelScope.launch {
-            _rezultat.value = OdgovorRepository.postaviOdgovorKviz(
+            val bodovi = OdgovorRepository.postaviOdgovorKviz(
                 idKvizTaken = idPokusaja,
                 idPitanje = idPitanja,
                 odgovor = odgovor
+            )
+
+            _rezultat.value = bodovi
+
+            if (bodovi == -1) {
+                _poruka.value = "Odgovor nije ispravno poslan."
+                return@launch
+            }
+
+            _pokusaj.value = trenutniPokusaj.copy(
+                osvojenBodovi = bodovi
             )
         }
     }

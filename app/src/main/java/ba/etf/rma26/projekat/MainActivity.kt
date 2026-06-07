@@ -23,10 +23,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             FakultetskiKvizoviTheme {
-               /* LaunchedEffect(Unit) {
-                    AccountRepository.postaviHash("m7")
-                }*/
-                AppDateProvider.postaviReferentniDatum(LocalDate.of(2021, 5, 21))
+                /*LaunchedEffect(Unit) { AccountRepository.postaviHash("m15")}*/
+                AppDateProvider.postaviReferentniDatum(LocalDate.of(2021, 6, 9))
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background

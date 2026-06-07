@@ -7,4 +7,7 @@ data class Pitanje(
     val tekstPitanja: String = "",
     val opcije: List<String> = emptyList(),
     val tacan: Int = -1
-)
+) {
+    val odgovori: List<String>
+        get() = opcije
+}

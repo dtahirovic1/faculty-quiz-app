@@ -1,5 +1,6 @@
 package ba.etf.rma26.projekat.ui.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -50,6 +51,10 @@ fun KvizDetaljiScreen(
 
     LaunchedEffect(idKviza) {
         viewModel.ucitaj(idKviza)
+    }
+
+    BackHandler {
+        onBack()
     }
 
     Scaffold(

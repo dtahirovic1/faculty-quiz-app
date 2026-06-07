@@ -35,26 +35,33 @@ object OdgovorRepository {
     ): Int {
         val hash = AccountRepository.getHash()
 
-        if (hash.isBlank()) {
-            return -1
-        }
+        if (hash.isBlank()) return -1
+        if (odgovor < 0) return -1
 
-        if (odgovor < 0) {
-            return -1
-        }
+        val request = OdgovorRequest(
+            idPitanje = idPitanje,
+            odgovor = odgovor
+        )
 
         return try {
-            val response = RetrofitClient.service.postaviOdgovor(
+            val postResponse = RetrofitClient.service.postaviOdgovor(
                 hash = hash,
                 idKvizTaken = idKvizTaken,
-                request = OdgovorRequest(
-                    idPitanje = idPitanje,
-                    odgovor = odgovor
-                )
+                request = request
             )
 
-            if (response.isSuccessful) {
-                response.body() ?: -1
+            if (postResponse.isSuccessful) {
+                return postResponse.body() ?: -1
+            }
+
+            val putResponse = RetrofitClient.service.promijeniOdgovor(
+                hash = hash,
+                idKvizTaken = idKvizTaken,
+                request = request
+            )
+
+            if (putResponse.isSuccessful) {
+                putResponse.body() ?: -1
             } else {
                 -1
             }

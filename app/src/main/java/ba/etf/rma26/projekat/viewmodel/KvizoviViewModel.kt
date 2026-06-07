@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 
 enum class FilterOpcija(val naziv: String) {
     SVI_MOJI("Svi moji kvizovi"),
@@ -68,6 +67,7 @@ class KvizViewModel : ViewModel() {
         val pokusaji = TakeKvizRepository.getPocetiKvizovi() ?: emptyList()
 
         val pokusajiMap = pokusaji.associateBy { it.idKviza }
+
         _pokusajiPoKvizu.value = pokusajiMap
 
         val filtrirani = when (_selectedFilter.value) {
@@ -76,7 +76,7 @@ class KvizViewModel : ViewModel() {
             FilterOpcija.SVI -> svi
 
             FilterOpcija.URADENI -> upisani.filter { kviz ->
-                pokusajiMap.containsKey(kviz.id)
+                pokusajiMap[kviz.id]?.zavrsen == true
             }
 
             FilterOpcija.BUDUCI -> upisani.filter { kviz ->
@@ -90,5 +90,7 @@ class KvizViewModel : ViewModel() {
 
         _kvizovi.value = filtrirani.sortedBy { it.datumPocetka }
         _loading.value = false
+
+
     }
 }

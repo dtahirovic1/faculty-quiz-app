@@ -28,12 +28,11 @@ fun String.toLocalDate(): LocalDate? {
         null
     }
 }
-
 fun Kviz.getStatus(
     pokusaj: KvizTaken?,
     referentniDatum: LocalDate
 ): KvizStatus {
-    if (pokusaj != null) {
+    if (pokusaj?.zavrsen == true) {
         return KvizStatus.PLAVA
     }
 
