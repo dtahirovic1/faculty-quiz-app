@@ -15,13 +15,12 @@ import androidx.compose.ui.unit.sp
 import ba.etf.rma26.projekat.data.models.Kviz
 import ba.etf.rma26.projekat.data.models.KvizStatus
 import ba.etf.rma26.projekat.data.models.KvizTaken
-import ba.etf.rma26.projekat.data.models.getStatus
 import ba.etf.rma26.projekat.ui.theme.AMGSilver
 import ba.etf.rma26.projekat.ui.theme.CardGraphite
 import ba.etf.rma26.projekat.ui.theme.SilverWhite
 import ba.etf.rma26.projekat.util.AppDateProvider
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import ba.etf.rma26.projekat.util.DateUtils
+import ba.etf.rma26.projekat.util.KvizStatusCalculator
 
 @Composable
 fun KvizCard(
@@ -30,7 +29,8 @@ fun KvizCard(
     onClick: () -> Unit = {},
     onNeaktivanClick: (KvizStatus) -> Unit = {}
 ) {
-    val status = kviz.getStatus(
+    val status = KvizStatusCalculator.izracunaj(
+        kviz = kviz,
         pokusaj = pokusaj,
         referentniDatum = AppDateProvider.danas()
     )
@@ -116,10 +116,5 @@ fun KvizCard(
 }
 
 private fun formatirajDatum(datum: String): String {
-    return try {
-        val localDate = LocalDate.parse(datum.take(10))
-        localDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
-    } catch (_: Exception) {
-        datum.take(10)
-    }
+    return DateUtils.formatApiDate(datum)
 }

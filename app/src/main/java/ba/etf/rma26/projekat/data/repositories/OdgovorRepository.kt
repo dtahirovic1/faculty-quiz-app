@@ -69,4 +69,32 @@ object OdgovorRepository {
             -1
         }
     }
+
+    suspend fun postaviOdgovoreKviz(
+        idKvizTaken: Int,
+        odgovori: Map<Int, Int>
+    ): Int {
+        if (odgovori.isEmpty()) {
+            return -1
+        }
+
+        var zadnjiRezultat = -1
+
+        odgovori.forEach { (idPitanja, odgovor) ->
+            val rezultat = postaviOdgovorKviz(
+                idKvizTaken = idKvizTaken,
+                idPitanje = idPitanja,
+                odgovor = odgovor
+            )
+
+            if (rezultat == -1) {
+                return -1
+            }
+
+            zadnjiRezultat = rezultat
+        }
+
+        return zadnjiRezultat
+    }
+
 }

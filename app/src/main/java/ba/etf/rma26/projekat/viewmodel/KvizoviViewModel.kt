@@ -4,11 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ba.etf.rma26.projekat.data.models.Kviz
 import ba.etf.rma26.projekat.data.models.KvizTaken
-import ba.etf.rma26.projekat.data.models.toLocalDate
 import ba.etf.rma26.projekat.data.repositories.AccountRepository
 import ba.etf.rma26.projekat.data.repositories.KvizRepository
 import ba.etf.rma26.projekat.data.repositories.TakeKvizRepository
 import ba.etf.rma26.projekat.util.AppDateProvider
+import ba.etf.rma26.projekat.util.KvizFilter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -60,37 +60,20 @@ class KvizViewModel : ViewModel() {
     private suspend fun ucitajKvizove() {
         _loading.value = true
 
-        val danas = AppDateProvider.danas()
-
         val svi = KvizRepository.getAll()
         val upisani = KvizRepository.getUpisani()
         val pokusaji = TakeKvizRepository.getPocetiKvizovi() ?: emptyList()
-
         val pokusajiMap = pokusaji.associateBy { it.idKviza }
 
         _pokusajiPoKvizu.value = pokusajiMap
+        _kvizovi.value = KvizFilter.filtriraj(
+            filter = _selectedFilter.value,
+            svi = svi,
+            upisani = upisani,
+            pokusajiPoKvizu = pokusajiMap,
+            referentniDatum = AppDateProvider.danas()
+        )
 
-        val filtrirani = when (_selectedFilter.value) {
-            FilterOpcija.SVI_MOJI -> upisani
-
-            FilterOpcija.SVI -> svi
-
-            FilterOpcija.URADENI -> upisani.filter { kviz ->
-                pokusajiMap[kviz.id]?.zavrsen == true
-            }
-
-            FilterOpcija.BUDUCI -> upisani.filter { kviz ->
-                kviz.datumPocetka.toLocalDate()?.isAfter(danas) == true
-            }
-
-            FilterOpcija.PROSLI -> upisani.filter { kviz ->
-                kviz.datumKraj.toLocalDate()?.isBefore(danas) == true
-            }
-        }
-
-        _kvizovi.value = filtrirani.sortedBy { it.datumPocetka }
         _loading.value = false
-
-
     }
 }

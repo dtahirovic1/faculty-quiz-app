@@ -65,6 +65,15 @@ interface ApiService {
         @Path("hash") hash: String
     ): Response<List<KvizTaken>?>
 
+
+
+    @POST("student/{hash}/kviztaken/{id}/zavrsi")
+    suspend fun zavrsiKviz(
+        @Path("hash") hash: String,
+        @Path("id") idKvizTaken: Int,
+        @Header("X-API-Key") apiKey: String? = ApiConfig.getApiKey()
+    ): Response<KvizTaken>
+
     @GET("student/{hash}/kviz/{id}/odgovori")
     suspend fun getOdgovoriKviz(
         @Path("hash") hash: String,

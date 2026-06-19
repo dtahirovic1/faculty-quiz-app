@@ -1,5 +1,7 @@
 package ba.etf.rma26.projekat.data.models
 
+import ba.etf.rma26.projekat.util.DateUtils
+import ba.etf.rma26.projekat.util.KvizStatusCalculator
 import java.time.LocalDate
 
 data class Kviz(
@@ -22,30 +24,16 @@ enum class KvizStatus {
 }
 
 fun String.toLocalDate(): LocalDate? {
-    return try {
-        LocalDate.parse(this.take(10))
-    } catch (_: Exception) {
-        null
-    }
+    return DateUtils.parseApiDate(this)
 }
+
 fun Kviz.getStatus(
     pokusaj: KvizTaken?,
     referentniDatum: LocalDate
 ): KvizStatus {
-    if (pokusaj?.zavrsen == true) {
-        return KvizStatus.PLAVA
-    }
-
-    val pocetak = datumPocetka.toLocalDate()
-    val kraj = datumKraj.toLocalDate()
-
-    if (pocetak == null || kraj == null) {
-        return KvizStatus.ZELENA
-    }
-
-    return when {
-        referentniDatum.isBefore(pocetak) -> KvizStatus.ZUTA
-        referentniDatum.isAfter(kraj) -> KvizStatus.CRVENA
-        else -> KvizStatus.ZELENA
-    }
+    return KvizStatusCalculator.izracunaj(
+        kviz = this,
+        pokusaj = pokusaj,
+        referentniDatum = referentniDatum
+    )
 }

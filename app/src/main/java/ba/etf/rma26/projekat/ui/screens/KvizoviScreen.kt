@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import ba.etf.rma26.projekat.data.models.KvizStatus
 import ba.etf.rma26.projekat.ui.components.KvizCard
+import ba.etf.rma26.projekat.util.Messages
 import ba.etf.rma26.projekat.viewmodel.KvizViewModel
 import kotlinx.coroutines.launch
 
@@ -85,10 +86,5 @@ fun KvizoviScreen(
     }
 }
 private fun porukaZaStatus(status: KvizStatus): String {
-    return when (status) {
-        KvizStatus.PLAVA -> "Ovaj kviz je već urađen."
-        KvizStatus.CRVENA -> "Ovaj kviz je prošao."
-        KvizStatus.ZUTA -> "Ovaj kviz još nije počeo."
-        KvizStatus.ZELENA -> ""
-    }
+    return Messages.porukaZaStatus(status)
 }

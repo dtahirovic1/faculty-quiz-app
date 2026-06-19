@@ -28,15 +28,21 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ba.etf.rma26.projekat.data.models.Kviz
+import ba.etf.rma26.projekat.data.models.KvizStatus
 import ba.etf.rma26.projekat.ui.theme.AMGSilver
 import ba.etf.rma26.projekat.ui.theme.CardGraphite
 import ba.etf.rma26.projekat.ui.theme.SilverWhite
+import ba.etf.rma26.projekat.util.DateUtils
+import ba.etf.rma26.projekat.util.Messages
 import ba.etf.rma26.projekat.viewmodel.KvizDetaljiViewModel
 
 private val PetronasTeal = Color(0xFF00A19C)
+private val SelectedAnswerColor = Color(0xFFD7D7D7)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,8 +51,15 @@ fun KvizDetaljiScreen(
     viewModel: KvizDetaljiViewModel,
     onBack: () -> Unit
 ) {
+    val kviz by viewModel.kviz.collectAsState()
     val pitanja by viewModel.pitanja.collectAsState()
-    val rezultat by viewModel.rezultat.collectAsState()
+    val pokusaj by viewModel.pokusaj.collectAsState()
+    val imaZapocetPokusaj by viewModel.imaZapocetPokusaj.collectAsState()
+    val odabraniOdgovori by viewModel.odabraniOdgovori.collectAsState()
+    val kvizZavrsen by viewModel.kvizZavrsen.collectAsState()
+    val korisnikUpisan by viewModel.korisnikUpisan.collectAsState()
+    val provjeraUpisaZavrsena by viewModel.provjeraUpisaZavrsena.collectAsState()
+    val status by viewModel.status.collectAsState()
     val poruka by viewModel.poruka.collectAsState()
 
     LaunchedEffect(idKviza) {
@@ -80,23 +93,10 @@ fun KvizDetaljiScreen(
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            rezultat?.let { bodovi ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 12.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = CardGraphite,
-                        contentColor = SilverWhite
-                    )
-                ) {
-                    Text(
-                        text = "Rezultat: $bodovi",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = SilverWhite,
-                        modifier = Modifier.padding(12.dp)
-                    )
+            if (pokusaj == null) {
+                kviz?.let {
+                    KvizInfoCard(kviz = it)
+                    Spacer(modifier = Modifier.height(12.dp))
                 }
             }
 
@@ -119,16 +119,61 @@ fun KvizDetaljiScreen(
                     )
                 }
 
+                if (pokusaj == null || kvizZavrsen) {
+                    return@Column
+                }
+            }
+
+            if (kviz == null && poruka == null) {
+                Text(
+                    text = "Učitavanje detalja kviza...",
+                    fontSize = 14.sp,
+                    color = AMGSilver
+                )
+                return@Column
+            }
+
+            if (pokusaj == null) {
+                if (!provjeraUpisaZavrsena) {
+                    Text(
+                        text = "Provjera upisa...",
+                        fontSize = 14.sp,
+                        color = AMGSilver
+                    )
+                    return@Column
+                }
+
+                if (korisnikUpisan && status == KvizStatus.ZELENA && !kvizZavrsen) {
+                    Button(
+                        onClick = { viewModel.zapocniKviz() },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = PetronasTeal,
+                            contentColor = Color(0xFF0A0A0A)
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .testTag("zapocniKvizDugme")
+                    ) {
+                        Text(if (imaZapocetPokusaj) "Nastavi kviz" else "Započni kviz")
+                    }
+                }
                 return@Column
             }
 
             if (pitanja.isEmpty()) {
                 Text(
-                    text = "Nema pitanja za ovaj kviz.",
+                    text = Messages.NEMA_PITANJA,
                     fontSize = 14.sp,
                     color = AMGSilver
                 )
             } else {
+                Text(
+                    text = "Odgovoreno: ${odabraniOdgovori.size}/${pitanja.size}",
+                    fontSize = 14.sp,
+                    color = AMGSilver,
+                    modifier = Modifier.padding(bottom = 10.dp)
+                )
+
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier.fillMaxSize()
@@ -154,6 +199,8 @@ fun KvizDetaljiScreen(
                                 Spacer(modifier = Modifier.height(10.dp))
 
                                 pitanje.opcije.forEachIndexed { index, opcija ->
+                                    val odabran = odabraniOdgovori[pitanje.id] == index
+
                                     Button(
                                         onClick = {
                                             viewModel.odgovori(
@@ -162,7 +209,7 @@ fun KvizDetaljiScreen(
                                             )
                                         },
                                         colors = ButtonDefaults.buttonColors(
-                                            containerColor = PetronasTeal,
+                                            containerColor = if (odabran) SelectedAnswerColor else PetronasTeal,
                                             contentColor = Color(0xFF0A0A0A)
                                         ),
                                         modifier = Modifier
@@ -175,8 +222,76 @@ fun KvizDetaljiScreen(
                             }
                         }
                     }
+
+                    item {
+                        Button(
+                            onClick = { viewModel.zavrsiKviz() },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = PetronasTeal,
+                                contentColor = Color(0xFF0A0A0A)
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp, bottom = 24.dp)
+                                .testTag("zavrsiKvizDugme")
+                        ) {
+                            Text("Završi kviz")
+                        }
+                    }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun KvizInfoCard(kviz: Kviz) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = CardGraphite,
+            contentColor = SilverWhite
+        )
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(
+                text = kviz.naziv,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = SilverWhite
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "Predmet: ${kviz.nazivPredmeta ?: "Nepoznat predmet"}",
+                fontSize = 14.sp,
+                color = AMGSilver
+            )
+
+            Text(
+                text = "Grupa: ${kviz.nazivGrupe ?: "Nepoznata grupa"}",
+                fontSize = 14.sp,
+                color = AMGSilver
+            )
+
+            Text(
+                text = "Trajanje: ${kviz.trajanje} min",
+                fontSize = 14.sp,
+                color = AMGSilver
+            )
+
+            Text(
+                text = "Početak: ${DateUtils.formatApiDate(kviz.datumPocetka)}",
+                fontSize = 14.sp,
+                color = AMGSilver
+            )
+
+            Text(
+                text = "Kraj: ${DateUtils.formatApiDate(kviz.datumKraj)}",
+                fontSize = 14.sp,
+                color = AMGSilver
+            )
         }
     }
 }

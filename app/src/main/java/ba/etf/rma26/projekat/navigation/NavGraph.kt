@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import ba.etf.rma26.projekat.ui.screens.AccountScreen
 import ba.etf.rma26.projekat.ui.screens.FilterScreen
 import ba.etf.rma26.projekat.ui.screens.KvizDetaljiScreen
 import ba.etf.rma26.projekat.ui.screens.KvizoviScreen
@@ -23,8 +24,18 @@ fun NavGraph() {
 
     NavHost(
         navController = navController,
-        startDestination = "filter"
+        startDestination = "account"
     ) {
+        composable("account") {
+            AccountScreen(
+                onNastavi = {
+                    navController.navigate("filter") {
+                        popUpTo("account") { inclusive = true }
+                    }
+                }
+            )
+        }
+
         composable("filter") {
             FilterScreen(
                 upisViewModel = upisViewModel,
