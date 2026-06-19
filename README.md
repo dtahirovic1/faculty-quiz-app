@@ -8,6 +8,10 @@ Mobilna aplikacija za fakultetske kvizove rađena u okviru predmeta **Razvoj mob
 - Jetpack Compose
 - Android Studio
 
+### Napomena o referentnom datumu aplikacije
+
+Pošto aplikacija ima implementiranu logiku da se kvizovi koji su prošli ne mogu pokretati, korištenje stvarnog datuma bi onemogućilo pokretanje kvizova sa datog backenda. Zbog toga se koristi hardkodirani referentni datum koji odgovara datumima kvizova iz backend baze.
+
 # Spirala 4:
 
 ## Korisnička perspektiva:
