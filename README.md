@@ -10,7 +10,7 @@ Mobilna aplikacija za fakultetske kvizove rađena u okviru predmeta **Razvoj mob
 
 # Spirala 4:
 
-## Korisnička perspektiva
+## Korisnička perspektiva:
 
 ### 1. Početni ekran za unos username-a
 
@@ -33,7 +33,7 @@ Uklonjen je prikaz rezultata dok korisnik odgovara na pitanja. Odgovori se pamte
 Aplikacija sada provjerava da li je korisnik upisan baš u grupu kojoj kviz pripada.
 
 
-## Razvojna perspektiva
+## Razvojna perspektiva:
 
 ### 1. Izdvojena logika filtriranja kvizova
 
@@ -47,11 +47,7 @@ Računanje statusa kviza izdvojeno je u `KvizStatusCalculator`.
 
 Poruke za greške, statuse i korisničke obavijesti prebačene su u `Messages`.
 
-### 4. Odvojeno učitavanje detalja od pokretanja kviza
-
-`KvizDetaljiViewModel` više ne pokreće kviz u funkciji `ucitaj`. Učitavanje detalja i početak kviza sada su dvije odvojene akcije.
-
-### 5. Lokalno zaključavanje završenog kviza
+### 4. Lokalno zaključavanje završenog kviza
 
 Dodana je lokalna evidencija završenih kvizova u `TakeKvizRepository`, tako da se završeni kviz tretira kao zaključen.
 
