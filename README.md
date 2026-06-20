@@ -53,5 +53,5 @@ Poruke za greške, statuse i korisničke obavijesti prebačene su u `Messages`.
 
 ### 4. Lokalno zaključavanje završenog kviza
 
-Dodana je lokalna evidencija završenih kvizova u `TakeKvizRepository`, tako da se završeni kviz tretira kao zaključen.
+Dodano je lokalno praćenje završenih kvizova u `TakeKvizRepository`, tako da se završeni kviz tretira kao zaključan.
 
