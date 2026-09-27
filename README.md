@@ -1,57 +1,48 @@
-# RMA
+# Faculty Quizzes Mobile Application
 
-Mobilna aplikacija za fakultetske kvizove rađena u okviru predmeta **Razvoj mobilnih aplikacija**.
+Android mobile application for managing university courses and quizzes, developed as part of the **Mobile Application Development** course at the Faculty of Electrical Engineering, University of Sarajevo.
 
-## Tehnologije
+The project was developed incrementally through four development iterations, starting with a local Jetpack Compose application and evolving into a structured client application connected to a REST backend.
+
+## Features
+
+- Browse available quizzes
+- Filter quizzes by status
+- Enroll in university courses and groups
+- View quizzes associated with enrolled courses
+- Dynamic quiz status indicators
+- Navigate between filtering and quiz screens
+- Start quiz attempts
+- View quiz questions
+- Submit and update answers
+- Display quiz results
+- Persist application state during navigation and configuration changes
+- Communicate with a REST backend
+- Handle backend errors without crashing the application
+
+## Tech Stack
+
+### Android
 
 - Kotlin
 - Jetpack Compose
+- Navigation Compose
+- ViewModel
+- Kotlin Coroutines
+- Repository Pattern
+- REST API communication
 - Android Studio
 
-### Napomena o referentnom datumu aplikacije
+### Backend
 
-Pošto aplikacija ima implementiranu logiku da se kvizovi koji su prošli ne mogu pokretati, korištenje stvarnog datuma bi onemogućilo pokretanje kvizova sa datog backenda. Zbog toga se koristi hardkodirani referentni datum koji odgovara datumima kvizova iz backend baze.
+The Android application communicates with the provided RMA26 backend service.
 
-# Spirala 4:
+The backend exposes endpoints for:
 
-## Korisnička perspektiva:
-
-### 1. Početni ekran za unos username-a
-
-Dodana je nova početna stranica `AccountScreen` na kojoj korisnik unosi username. Uneseni username se u pozadini koristi kao hash za rad sa backend servisom.
-
-### 2. Kviz se više ne pokreće automatski otvaranjem detalja
-
-U originalnoj verziji ulazak u detalje kviza odmah je započinjao pokušaj kviza. Sada ekran prvo prikazuje detalje kviza, a pokušaj se kreira tek klikom na dugme `Započni kviz`.
-
-### 3. Dodano dugme `Završi kviz`
-
-Dodano je dugme kojim korisnik jasno završava kviz. Prije završavanja provjerava se da li su odgovorena sva pitanja.
-
-### 4. Rezultat se ne prikazuje tokom rada kviza
-
-Uklonjen je prikaz rezultata dok korisnik odgovara na pitanja. Odgovori se pamte lokalno i šalju se tek kada korisnik klikne `Završi kviz`.
-
-### 5. Blokirano pokretanje kviza ako korisnik nije upisan u odgovarajuću grupu i predmet
-
-Aplikacija sada provjerava da li je korisnik upisan baš u grupu kojoj kviz pripada.
-
-
-## Razvojna perspektiva:
-
-### 1. Izdvojena logika filtriranja kvizova
-
-Logika za filtriranje kvizova izdvojena je iz `KvizViewModel` u novu pomoćnu klasu `KvizFilter`.
-
-### 2. Izdvojeno računanje statusa kviza
-
-Računanje statusa kviza izdvojeno je u `KvizStatusCalculator`.
-
-### 3. Centralizovane tekstualne poruke
-
-Poruke za greške, statuse i korisničke obavijesti prebačene su u `Messages`.
-
-### 4. Lokalno zaključavanje završenog kviza
-
-Dodano je lokalno praćenje završenih kvizova u `TakeKvizRepository`, tako da se završeni kviz tretira kao zaključan.
-
+- Courses
+- Groups
+- Student enrollments
+- Quizzes
+- Questions
+- Quiz attempts
+- Answers
