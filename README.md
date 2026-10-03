@@ -1,48 +1,48 @@
 # Faculty Quizzes Mobile Application
 
-Android mobile application for managing university courses and quizzes, developed as part of the **Mobile Application Development** course at the Faculty of Electrical Engineering, University of Sarajevo.
+Android application for university courses and quizzes, developed as part of the **Mobile Application Development** course at the Faculty of Electrical Engineering, University of Sarajevo.
 
-The project was developed incrementally through four development iterations, starting with a local Jetpack Compose application and evolving into a structured client application connected to a REST backend.
+The application allows students to browse quizzes, enroll in courses and groups, complete quizzes, submit answers, and view results. It communicates with a provided REST backend and follows the MVVM architecture.
 
 ## Features
 
-- Browse available quizzes
-- Filter quizzes by status
-- Enroll in university courses and groups
-- View quizzes associated with enrolled courses
-- Dynamic quiz status indicators
-- Navigate between filtering and quiz screens
-- Start quiz attempts
-- View quiz questions
-- Submit and update answers
-- Display quiz results
-- Persist application state during navigation and configuration changes
-- Communicate with a REST backend
-- Handle backend errors without crashing the application
+- Browse and filter available quizzes
+- Enroll in courses and groups
+- View quizzes for enrolled courses
+- Complete quizzes and submit answers
+- View quiz results
+- Persist and manage application state
+- Retrieve and submit data through a REST API
+- Handle network and backend errors
 
-## Tech Stack
-
-### Android
+## Technologies
 
 - Kotlin
 - Jetpack Compose
-- Navigation Compose
+- MVVM
 - ViewModel
 - Kotlin Coroutines
-- Repository Pattern
-- REST API communication
-- Android Studio
+- REST API
+- Retrofit
+- Room
+- StateFlow
+- Navigation Compose
 
-### Backend
+## Architecture
 
-The Android application communicates with the provided RMA26 backend service.
+The application follows the **MVVM (Model-View-ViewModel)** architecture to separate the user interface from application and data-handling logic.
 
-The backend exposes endpoints for:
+Jetpack Compose is used for the UI, while ViewModels manage UI state and application logic. Kotlin Coroutines are used for asynchronous operations, Retrofit handles communication with the REST backend, and Room provides local data persistence.
 
-- Courses
-- Groups
+## Backend Integration
+
+The application communicates with a provided REST API for operations involving:
+
+- Courses and groups
 - Student enrollments
-- Quizzes
-- Questions
+- Quizzes and questions
 - Quiz attempts
-- Answers
+- Answer submission and results
+
+**Dino Tahirović**  
+Faculty of Electrical Engineering, University of Sarajevo
